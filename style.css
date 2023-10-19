@@ -1,0 +1,123 @@
+*{
+	padding:0;
+	margin: 0;
+	box-sizing: border-box;
+	font-family: 'Montserrat',sans-serif;
+	list-style: none;
+	text-decoration: none;
+	scroll-behavior: smooth;
+}
+:root
+{
+	--bg-color:#ffffff;
+	--text-color:#22100d;
+	--second-coloer:#685f78;
+	--main-color:#f66962;
+	--big-font:3.8rem;
+	--h2-font:2.6rem;
+	--p-font:1.1rem;
+
+}
+body{
+	background: var(--bg-color);
+	color: var(--text-color);
+}
+header{
+	position: fixed;
+	width: 100%;
+	top:0;
+	right:0;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: transparent;
+	padding: 23 px 13%;
+	transition:all .40s ease ;
+	margin-top: 30px;
+}
+.logo img{
+	height: auto;
+	width: 160px;
+	max-width: 100%;
+}
+.navbar
+{
+	display: flex;
+
+}
+.navbar a{
+	color: var(--text-color);
+	font-weight: 600;
+	font-size: var(--p-font);
+	padding: 10px 22px;
+	transition: all .40s ease;
+}
+.navbar a:hover{
+	color: var(--main-color);
+}
+.header-icons{
+	display: flex;
+	align-items: center;
+	margin-right: 150px;
+}
+.header-icons i{
+	margin-left: 10px;
+	font-size: 24px;
+	color: var(--text-color);
+	transition: all .40s ease;
+	margin-right: 15px;
+}
+.header-icons i:hover{
+	transform:scale(1 2) ;
+	color: var(--main-color);
+}
+#menu-icon{
+	font-size: 34px;
+	color: var(--text-color);
+	z-index: 10001;
+	cursor: pointer;
+	display: none;
+}
+section{
+	padding: 80px 13%;
+}
+
+.home{
+	position: relative;
+	height: 100vh;
+	width: 100%;
+	background: url("background.jpg");
+	background-size:cover ;
+	background-position: center;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1rem;
+	align-items: center;
+}
+.home-text h1{
+	font-size: var(--big-font);
+	margin: 15px 0 15px;
+
+}
+.home-text h6{
+	color: var(--main-color);
+	font-size: 18px;
+	font-weight: 600;
+	letter-spacing: 2px;
+}
+.home-text p{
+	color: var(--second-color);
+	font-size: var(--p-font);
+	font-weight: 500;
+	margin-bottom: 30px;
+}
+button {
+  background-color: lightcoral;
+  color: black;
+  padding: 5px 10px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 15%;
+}
