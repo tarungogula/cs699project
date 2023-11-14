@@ -27,6 +27,17 @@ SECRET_KEY = 'django-insecure-le&=&nmj3h_f%@a#)9c%h_o0tx&)#f0dj6oc_p77!oxid)oekx
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+LOGIN_REDIRECT_URL='index'
+LOGOUT_REDIRECT_URL='login'
+
+EMAIL_HOST='smtp.zoho.com'
+EMAIL_HOST_USER='projectdemocs699@zohomail.in'
+EMAIL_HOST_PASSWORD='demomail@9999'
+EMAIL_PORT='465'
+EMAIL_USE_TLS=True
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+
+
 
 ALLOWED_HOSTS = []
 
@@ -34,6 +45,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'app',
+    'bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,11 +91,14 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'CS699 database',  # Replace with the name of your database
+        'USER': 'postgres',  # Replace with your PostgreSQL username
+        'PASSWORD': 'siva9999',  # Replace with your PostgreSQL password
+        'HOST': 'localhost',  # Set the host to the PostgreSQL server location (localhost in most cases)
+        'PORT': '',  # Leave empty to use the default PostgreSQL port (5432)
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -118,7 +134,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT='/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -128,5 +145,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Added manually
 STATICFILES_DIRS=[
-    os.path.join(BASE_DIR,"templates"),
+    os.path.join(BASE_DIR,"static"),
 ]

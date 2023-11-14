@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> Online Course website</title>
+	
+
+
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static '/style.css' %}">
+
+  <link rel="stylesheet"
+  href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+
+  	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+	<style>
+
+		input[type=text], select, textarea {
+  width: 100%; /* Full width */
+  padding: 12px; /* Some padding */ 
+  border: 1px solid #ccc; /* Gray border */
+  border-radius: 4px; /* Rounded borders */
+  box-sizing: border-box; /* Make sure that padding and width stays in place */
+  margin-top: 6px; /* Add a top margin */
+  margin-bottom: 16px; /* Bottom margin */
+  resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
+}
+
+/* Style the submit button with a specific background color etc */
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* When moving the mouse over the submit button, add a darker green color */
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+/* Add a background color and some padding around the form */
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  margin-top:100px
+}
+h1 {
+    margin-top:100px
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    padding: 20px;
+    background-color: #3498db;
+    color: #fff;
+}
+
+.course-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.course-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    width: 300px;
+    height:300px
+}
+
+.course-card:hover {
+    transform: scale(1.05);
+}
+
+.course-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.course-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.course-details {
+    font-size: 0.9em;
+    color: #777;
+}
+	</style>
+
+</head>
+<body >
+	<header margin-botton:10%>
+		<a href="#" class="logo">
+		</a>
+		<u1 class="navbar">
+			<li> <a href="index">Home</a></li>
+			<li><a href="courses">Courses</a></li>
+			<li><a href="#about">About</a> </li>
+			<li><a href="contact">Contact</a></li>
+		</u1>
+		<div class="header-icons">
+			<a href="profile"><i class="bx bx-user"></i>   </a>
+			<a href="courses"><i class="bx bx-menu"></i>   </a>
+		</div>
+	</header>
+    <h1>Available Courses</h1>
+    <div class="course-container">
+        {% for course in courses %}
+            <a href="{% url 'course_detail' course.id %}" style="text-decoration: none; color: inherit;">
+                <div class="course-card">
+                    <img class="course-image" src="{{ course.image.url }}" alt="{{ course.title }}">
+                    <div class="course-title">{{ course.title }}</div>
+                    <div class="course-details">
+                        <p><strong>Instructor:</strong> {{ course.instructor }}</p>
+                        <p><strong>Author:</strong> {{ course.author }}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+	<script type="text/javascript" src="js/script.js"></script>
+
+
+</body>
+</html>
