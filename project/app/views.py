@@ -7,6 +7,9 @@ from django.contrib.auth import authenticate,login,logout
 from app.Emailbackend import EmailBackEnd
 from django.contrib.auth.decorators import login_required
 from app.models import *
+from django.forms import inlineformset_factory
+from .forms import CourseForm, VideoForm
+
 # Create your views here.
 def index(request):
     course=Course.objects.all()
@@ -54,9 +57,32 @@ def forgot(request):
     return render(request,"forgot.html")
 
 def edu_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user!=None:
+            login(request,user)
+            return redirect('index')
+        else:
+            messages.error(request,'Email and Password are Invalid')
+            return redirect('edu_login')
     return render(request,"edu_login.html")
 
 def edu_register(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = User.objects.create_user(username, email, password)
+
+        author = Author.objects.create(name=user)
+
+        return redirect('index') 
+
     return render(request,"educator_register.html")
 
 def contact(request):
@@ -100,9 +126,9 @@ def profile_update(request):
         messages.success(request,'Profile Are Successfully Updated. ')
         return redirect('profile')
 
+@login_required(login_url='login')
 def courses(request):
     course=Course.objects.all()
-    print(course)
     context={'courses':course,}
     return render(request,'Courses.html',context)
 def course_detail(request,course_id):
@@ -114,3 +140,29 @@ def video_detail(request,course_id,video_id):
     course=get_object_or_404(Course,pk=course_id)
     video=get_object_or_404(Video,pk=video_id,course=course)
     return render(request,'video_detail.html',{'course': course, 'video': video})
+
+def add_course(request):
+    if not request.user.is_authenticated or not hasattr(request.user, 'author'):
+        return redirect('edu_login') 
+    AuthorCourseFormSet = inlineformset_factory(Author, Course, form=CourseForm, extra=1)
+    VideoFormSet = inlineformset_factory(Course, Video, form=VideoForm, extra=1)
+
+    author = Author.objects.get(user=request.user)  # Adjust this according to your user-author relationship
+
+    if request.method == 'POST':
+        course_formset = AuthorCourseFormSet(request.POST, instance=author, prefix='courses')
+        video_formset = VideoFormSet(request.POST, prefix='videos')
+
+        if course_formset.is_valid() and video_formset.is_valid():
+            course_formset.save()
+            instances = video_formset.save(commit=False)
+            for instance in instances:
+                instance.course = course_formset.instance
+                instance.save()
+
+            return redirect('course_list')  # Redirect to course list page
+    else:
+        course_formset = AuthorCourseFormSet(instance=author, prefix='courses')
+        video_formset = VideoFormSet(prefix='videos')
+
+    return render(request, 'add_course.html', {'course_formset': course_formset, 'video_formset': video_formset})

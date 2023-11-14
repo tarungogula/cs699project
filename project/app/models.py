@@ -9,7 +9,6 @@ class ContactSubmission(models.Model):
     class Meta:
         app_label='app'
 class Author(models.Model):
-    author_profile=models.ImageField(upload_to="Media/author")
     name=models.CharField(max_length=100,null=True)
     def __str__(self):
         return self.name
