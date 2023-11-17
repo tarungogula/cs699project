@@ -5,12 +5,82 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title> Online Course website</title>
+	{% load static %}
+	<script type="text/javascript" src="{% static 'javascript.js' %}" defer></script>
 	<style>	
 		body 
 		{
   			background-image: url('background.jpg');
   			background-repeat: no-repeat;
 		}
+		h2
+		{
+			margin-top:100px;
+		}
+		/* Add this CSS in a file (e.g., styles.css) and include it in your project */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+.alert {
+	padding: 20px;
+	background-color: #FF6645; /* Red */
+	color: white;
+	margin-bottom: 15px;
+  }
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #007bff;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#video-formset {
+    margin-top: 20px;
+}
+
+.card {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
 	</style>
 
 
@@ -44,4 +114,5 @@
 
 
 </body>
+<
 </html>

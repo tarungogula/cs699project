@@ -1,76 +1,43 @@
-<!-- add_course.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Course</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<!-- templates/add_course.html -->
 
-        form {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            max-width: 100%;
-        }
+{% extends 'base.html' %}
 
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #3498db;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .video-formset {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <form method="post">
-        {% csrf_token %}
-        {{ course_formset.management_form }}
-        {{ course_formset.non_form_errors }}
-        {% for form in course_formset.forms %}
-            {{ form.id }}
-            {{ form.as_p }}
-        {% endfor %}
-
-        <div class="video-formset">
-            {{ video_formset.management_form }}
-            {{ video_formset.non_form_errors }}
-            {% for form in video_formset.forms %}
-                {{ form.id }}
-                {{ form.as_p }}
-            {% endfor %}
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="mb-4">Add Course</h2>
+    <form method="post" enctype="multipart/form-data" action="{% url 'add_course' %}">
+      {% csrf_token %}
+      {% if course_form.errors %}
+        <div class="alert alert-danger">
+          <strong>Error!</strong> Course with this title already exsits.
         </div>
-
-        <button type="submit">Add Course</button>
+      {% endif %}
+      <div class="mb-3">
+        <label for="id_title" class="form-label">Course Title:</label>
+        <input type="text" name="title" id="id_title" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="id_image" class="form-label">Course Image:</label>
+        <input type="file" name="image" id="id_image" class="form-control" accept="image/*">
+      </div>
+      <hr>
+      <h4 class="mb-3">Add Videos</h4>
+      <div id="video-formset">
+        {{ video_formset.management_form }}
+        <div class="card mb-3">
+          <div class="card-body">
+            <label for="id_videos-0-title" class="form-label">Video Title:</label>
+            <input type="text" name="videos-0-title" id="id_videos-0-title" class="form-control" required>
+            <br>
+            <label for="id_videos-0-video_url" class="form-label">Video URL:</label>
+            <input type="url" name="videos-0-video_url" id="id_videos-0-video_url" class="form-control" required>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" id="add-video">Add Video</button>
+      <button type="submit" class="btn btn-primary mt-3">Submit</button>
     </form>
-</body>
-</html>
+  </div>
+
+  
+{% endblock %}

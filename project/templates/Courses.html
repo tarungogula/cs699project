@@ -77,7 +77,23 @@ h1 {
     justify-content: space-around;
     padding: 20px;
 }
+.add-course-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
+.add-course-button:hover {
+    background-color: #0056b3;
+}
 .course-card {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -130,20 +146,25 @@ h1 {
 		</div>
 	</header>
     <h1>Available Courses</h1>
-    <div class="course-container">
-        {% for course in courses %}
-            <a href="{% url 'course_detail' course.id %}" style="text-decoration: none; color: inherit;">
-                <div class="course-card">
-                    <img class="course-image" src="{{ course.image.url }}" alt="{{ course.title }}">
-                    <div class="course-title">{{ course.title }}</div>
-                    <div class="course-details">
-                        <p><strong>Instructor:</strong> {{ course.instructor }}</p>
-                        <p><strong>Author:</strong> {{ course.author }}</p>
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
+  <div class="course-container">
+    {% for course in courses %}
+      <div class="course-card">
+        <img class="course-image" src="{{ course.image.url }}" alt="{{ course.title }}">
+        <div class="course-title">{{ course.title }}</div>
+        <div class="course-details">
+          <p><strong>Instructor:</strong> {{ course.instructor }}</p>
+          <p><strong>Author:</strong> {{ course.author }}</p>
+          {% if user.is_authenticated %}
+            {% if course in user.enrolled_courses.all %}
+              <a href="{% url 'unenroll_course' course.id %}" class="btn btn-warning">Unenroll</a>
+            {% else %}
+              <a href="{% url 'enroll_course' course.id %}" class="btn btn-primary">Enroll</a>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 
 	<script type="text/javascript" src="js/script.js"></script>
 

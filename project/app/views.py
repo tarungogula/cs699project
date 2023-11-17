@@ -8,7 +8,7 @@ from app.Emailbackend import EmailBackEnd
 from django.contrib.auth.decorators import login_required
 from app.models import *
 from django.forms import inlineformset_factory
-from .forms import CourseForm, VideoForm
+from .forms import *
 
 # Create your views here.
 def index(request):
@@ -128,13 +128,12 @@ def profile_update(request):
 
 @login_required(login_url='login')
 def courses(request):
+    if request.method == 'POST':
+        return add_course(request)
+
     course=Course.objects.all()
     context={'courses':course,}
     return render(request,'Courses.html',context)
-def course_detail(request,course_id):
-    course=get_object_or_404(Course, pk=course_id)
-    videos=course.videos.all()
-    return render(request,'course_detail.html',{'course':course,'videos':videos})
 
 def video_detail(request,course_id,video_id):
     course=get_object_or_404(Course,pk=course_id)
@@ -142,27 +141,71 @@ def video_detail(request,course_id,video_id):
     return render(request,'video_detail.html',{'course': course, 'video': video})
 
 def add_course(request):
+    print(request.user.is_authenticated)
+    print(hasattr(request.user, 'author'))
+    print(request.user)
+    print(dir(request.user))
     if not request.user.is_authenticated or not hasattr(request.user, 'author'):
         return redirect('edu_login') 
     AuthorCourseFormSet = inlineformset_factory(Author, Course, form=CourseForm, extra=1)
-    VideoFormSet = inlineformset_factory(Course, Video, form=VideoForm, extra=1)
+    VideoFormSet = inlineformset_factory(Course, Video, form=VideoForm, extra=1,can_delete=True)
 
-    author = Author.objects.get(user=request.user)  # Adjust this according to your user-author relationship
+    author = Author.objects.get(name=request.user)  # Adjust this according to your user-author relationship
 
     if request.method == 'POST':
-        course_formset = AuthorCourseFormSet(request.POST, instance=author, prefix='courses')
+        course_form = CourseForm(request.POST, request.FILES)
         video_formset = VideoFormSet(request.POST, prefix='videos')
 
-        if course_formset.is_valid() and video_formset.is_valid():
-            course_formset.save()
-            instances = video_formset.save(commit=False)
-            for instance in instances:
-                instance.course = course_formset.instance
-                instance.save()
+        if course_form.is_valid() and video_formset.is_valid():
+            # Save the course
+            course = course_form.save(commit=False)
+            course.author = author
+            course = course_form.save()
 
-            return redirect('course_list')  # Redirect to course list page
+            # Save the videos associated with the course
+            videos = video_formset.save(commit=False)
+            for video in videos:
+                video.course = course
+                video.save()
+            messages.success(request, 'Course added successfully.')
+
+            return redirect('courses')
+
     else:
-        course_formset = AuthorCourseFormSet(instance=author, prefix='courses')
+        course_form = CourseForm()
         video_formset = VideoFormSet(prefix='videos')
 
-    return render(request, 'add_course.html', {'course_formset': course_formset, 'video_formset': video_formset})
+    context = {
+        'course_form': course_form,
+        'video_formset': video_formset,
+    }
+
+    return render(request, 'add_course.html', context)
+
+
+def enroll_course(request, course_id):
+    if request.user.is_authenticated and hasattr(request.user, 'student'):
+        student = request.user.student
+        course = get_object_or_404(Course, id=course_id)
+        
+        # Check if the student is already enrolled in the course
+        if not Enrollment.objects.filter(student=student, course=course).exists():
+            # Enroll the student in the course
+            Enrollment.objects.create(student=student, course=course)
+        else:
+            messages.warning(request, 'You are already enrolled in this course.')
+
+    return redirect('courses')  # Redirect to the courses page
+
+
+def course_detail(request,course_id):
+    course=get_object_or_404(Course, pk=course_id)
+    videos=course.videos.all()
+    if request.user.is_authenticated:
+        student = request.user.student
+        # Check if the student is enrolled in the course
+        is_enrolled = Enrollment.objects.filter(student=student, course=course).exists()
+        if not is_enrolled:
+            return redirect('courses')  # Redirect to the courses page if not enrolled
+
+    return render(request,'course_detail.html',{'course':course,'videos':videos})

@@ -19,7 +19,8 @@ urlpatterns = [
     path('profile_update',views.profile_update,name="profile_update"),
     path('logout', auth_views.LogoutView.as_view(), name='logout'),
     path('courses',views.courses,name='courses'),
-    path('course/<int:course_id>/',views.course_detail,name='course_detail'),
-    path('course/<int:course_id>/<int:video_id>/', views.video_detail, name='video_detail'),
+    path('course/<int:course_id>',views.course_detail,name='course_detail'),
+    path('course/<int:course_id>/<int:video_id>', views.video_detail, name='video_detail'),
     path('add_course',views.add_course,name='add_course'),
+    path('enroll/<int:course_id>/', views.enroll_course, name='enroll_course'),
 ]
