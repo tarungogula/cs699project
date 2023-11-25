@@ -100,8 +100,8 @@ h2 {
 		<a href="#" class="logo">
 		</a>
 		<u1 class="navbar">
-			<li> <a href="index">Home</a></li>
-			<li><a href="courses">Courses</a></li>
+			<li> <a href="{% url 'index' %}">Home</a></li>
+			<li><a href="{% url 'courses' %}">Courses</a></li>
 			<li><a href="#about">About</a> </li>
 			<li><a href="contact">Contact</a></li>
 		</u1>
@@ -109,7 +109,7 @@ h2 {
 			<a href="profile"><i class="bx bx-user"></i>   </a>
 			<a href="#"><i class="bx bx-menu"></i>   </a>
 		</div>
-	</header>
+	</header style="margin-bottom:20px">
     {%block content%} {% endblock %}
 
 

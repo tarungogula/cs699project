@@ -130,9 +130,18 @@ def profile_update(request):
 def courses(request):
     if request.method == 'POST':
         return add_course(request)
+    is_author = False
+
+    if request.user.is_authenticated:
+        # Check if the user has an associated Author model
+        try:
+            author_profile = request.user.author
+            is_author = True
+        except Author.DoesNotExist:
+            is_author = False
 
     course=Course.objects.all()
-    context={'courses':course,}
+    context={'courses':course,'is_author':is_author}
     return render(request,'Courses.html',context)
 
 def video_detail(request,course_id,video_id):
@@ -201,11 +210,31 @@ def enroll_course(request, course_id):
 def course_detail(request,course_id):
     course=get_object_or_404(Course, pk=course_id)
     videos=course.videos.all()
-    if request.user.is_authenticated:
-        student = request.user.student
-        # Check if the student is enrolled in the course
-        is_enrolled = Enrollment.objects.filter(student=student, course=course).exists()
-        if not is_enrolled:
-            return redirect('courses')  # Redirect to the courses page if not enrolled
-
     return render(request,'course_detail.html',{'course':course,'videos':videos})
+
+
+def modify_course(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    VideoFormSet = inlineformset_factory(Course, Video, form=VideoForm, extra=1, can_delete=True)
+
+    if request.method == 'POST':
+        course_form = CourseForm(request.POST, request.FILES, instance=course)
+        video_formset = VideoFormSet(request.POST, request.FILES, instance=course, prefix='videos')
+
+        if course_form.is_valid() and video_formset.is_valid():
+            course_form.save()
+            video_formset.save()
+            messages.success(request, 'Course modified successfully.')
+            return redirect('courses')
+
+    else:
+        course_form = CourseForm(instance=course)
+        video_formset = VideoFormSet(instance=course, prefix='videos')
+
+    context = {
+        'course_form': course_form,
+        'video_formset': video_formset,
+        'course': course,
+    }
+
+    return render(request, 'modify_course.html', context)

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="container mt-5">
+    <h2 class="mb-4">Modify Course</h2>
+        <form method="post" enctype="multipart/form-data" action="{% url 'modify_course' course.id %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="id_title" class="form-label">Course Title:</label>
+            <input type="text" name="title" id="id_title" class="form-control" value="{{ course.title }}" required>
+          </div>
+          <div class="mb-3">
+            <label for="id_image" class="form-label">Course Image:</label>
+            <input type="file" name="image" id="id_image" class="form-control" accept="image/*">
+          </div>
+          <hr>
+          <h4 class="mb-3">Modify Videos</h4>
+          <div id="video-formset">
+            {{ video_formset.management_form }}
+            {% for video_form in video_formset %}
+              <div class="card mb-3">
+                <div class="card-body">
+                  {{ video_form.as_p }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <button type="button" class="btn btn-primary" id="add-video" style="width:150px">Add Video</button>
+          <button type="submit" class="btn btn-primary mt-3">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Event listener for the "Add Video" button
+        document.getElementById('add-video').addEventListener('click', function() {
+            const videoFormset = document.getElementById('video-formset');
+            const formCountInput = document.getElementById('id_videos-TOTAL_FORMS');
+
+            // Counter for managing form prefixes
+            let formCount = parseInt(formCountInput.value);
+
+            console.log(`Before adding: formCount = ${formCount}`);
+
+            // Clone the last form in the formset and add three new forms
+            for (let i = 0; i < 10; i++) {
+                const newForm = videoFormset.lastElementChild.cloneNode(true);
+
+                // Update form prefixes in the cloned form
+                const regex = new RegExp(`videos-${formCount - 1}`, 'g');
+                newForm.innerHTML = newForm.innerHTML.replace(regex, `videos-${formCount}`);
+
+                // Increment form count
+                formCount++;
+
+                // Update the TOTAL_FORMS value in the form management form
+                formCountInput.value = formCount;
+
+                // Append the new form to the formset
+                videoFormset.appendChild(newForm);
+            }
+
+            console.log(`After adding: formCount = ${formCount}`);
+            console.log(`Updated TOTAL_FORMS: ${formCountInput.value}`);
+        });
+    });
+</script>
+
+
+{% endblock %}

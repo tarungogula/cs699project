@@ -2,6 +2,8 @@ from django import forms
 from .models import Course, Video
 from .models import ContactSubmission
 from django.core.exceptions import ValidationError
+from django.forms import inlineformset_factory
+
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -22,7 +24,9 @@ class CourseForm(forms.ModelForm):
 class VideoForm(forms.ModelForm):
     class Meta:
         model=Video
-        fields=['title','video_url']
-VideoFormSet = forms.modelformset_factory(
-    Video, form=VideoForm, extra=1, can_delete=True
-)
+        fields=['id','title','video_url']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Video Title'}),
+            'video_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Video URL'}),
+        }
+VideoFormSet = inlineformset_factory(Course, Video, form=VideoForm, extra=5, can_delete=True)
