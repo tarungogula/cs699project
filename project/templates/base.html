@@ -80,6 +80,18 @@ h2 {
 .btn-primary:hover {
     background-color: #0056b3;
 }
+.feature {
+	margin-bottom: 20px;
+}
+
+.feature h3 {
+	color: #333;
+	margin-top:10px
+}
+
+.feature p {
+	color: #555;
+}
 
 	</style>
 
@@ -93,6 +105,8 @@ h2 {
   	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
@@ -102,17 +116,18 @@ h2 {
 		<u1 class="navbar">
 			<li> <a href="{% url 'index' %}">Home</a></li>
 			<li><a href="{% url 'courses' %}">Courses</a></li>
-			<li><a href="#about">About</a> </li>
-			<li><a href="contact">Contact</a></li>
+			<li><a href="{% url 'about' %}">About</a> </li>
+			<li><a href="{% url 'contact' %}">Contact</a></li>
 		</u1>
 		<div class="header-icons">
 			<a href="profile"><i class="bx bx-user"></i>   </a>
-			<a href="#"><i class="bx bx-menu"></i>   </a>
+		
+			
+			<a href="{%url 'logout'%}"><i style="font-size:24px" class="fa">&#xf08b;</i></a>
 		</div>
 	</header style="margin-bottom:20px">
     {%block content%} {% endblock %}
 
 
 </body>
-<
 </html>

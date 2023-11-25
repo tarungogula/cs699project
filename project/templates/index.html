@@ -6,10 +6,12 @@
 		<h6>Best Online Learning Platform</h6>
 		<h1>Accessibe Online Course for All</h1>
 		<p>Own you future learning new skills online</p>
+		{% if not user.is_authenticated %}
 		<div class="latter">
-			<a href="login"><button type="submit">Student Login</button></a>
-			<a href="edu_login"><button type="submit">Teacher Login</button></a>
+			<a href="{% url 'login' %}"><button type="submit">Student Login</button></a>
+			<a href="{% url 'edu_login' %}"><button type="submit">Teacher Login</button></a>
 		</div>
+	{% endif %}
 	</div>
 	<div class="home-img">
 		{% load static %}
@@ -18,9 +20,5 @@
 	
 </section>
 
-<h1>Courses Available</h1>
-        {% for course in courses %}
-		<img src="{{ course.image.url }}" alt="{{ course.title }}" style="max-width: 100px;">
-            <li>{{ course.title }} - {{ course.author }} </li>
-        {% endfor %}
+
 {%endblock%}

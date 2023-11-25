@@ -29,7 +29,7 @@ def do_login(request):
         user=EmailBackEnd.authenticate(request,username=username,password=password)
         if user!=None:
             login(request,user)
-            return redirect('index')
+            return redirect('courses')
         else:
             messages.error(request,'Email and Password are Invalid')
             return redirect('login')
@@ -65,7 +65,7 @@ def edu_login(request):
 
         if user!=None:
             login(request,user)
-            return redirect('index')
+            return redirect('courses')
         else:
             messages.error(request,'Email and Password are Invalid')
             return redirect('edu_login')
@@ -123,7 +123,6 @@ def profile_update(request):
         if password != None and password != "":
             user.set_password(password)
         user.save()
-        messages.success(request,'Profile Are Successfully Updated. ')
         return redirect('profile')
 
 @login_required(login_url='login')
@@ -150,16 +149,12 @@ def video_detail(request,course_id,video_id):
     return render(request,'video_detail.html',{'course': course, 'video': video})
 
 def add_course(request):
-    print(request.user.is_authenticated)
-    print(hasattr(request.user, 'author'))
-    print(request.user)
-    print(dir(request.user))
     if not request.user.is_authenticated or not hasattr(request.user, 'author'):
         return redirect('edu_login') 
     AuthorCourseFormSet = inlineformset_factory(Author, Course, form=CourseForm, extra=1)
     VideoFormSet = inlineformset_factory(Course, Video, form=VideoForm, extra=1,can_delete=True)
 
-    author = Author.objects.get(name=request.user)  # Adjust this according to your user-author relationship
+    author = Author.objects.get(name=request.user)  
 
     if request.method == 'POST':
         course_form = CourseForm(request.POST, request.FILES)
@@ -176,11 +171,11 @@ def add_course(request):
             for video in videos:
                 video.course = course
                 video.save()
-            messages.success(request, 'Course added successfully.')
+
 
             return redirect('courses')
-
     else:
+        print("redirected again to same page")
         course_form = CourseForm()
         video_formset = VideoFormSet(prefix='videos')
 
@@ -224,7 +219,6 @@ def modify_course(request, course_id):
         if course_form.is_valid() and video_formset.is_valid():
             course_form.save()
             video_formset.save()
-            messages.success(request, 'Course modified successfully.')
             return redirect('courses')
 
     else:
@@ -238,3 +232,29 @@ def modify_course(request, course_id):
     }
 
     return render(request, 'modify_course.html', context)
+
+from django.shortcuts import render
+from django.core.mail import send_mail
+from django.conf import settings
+from django.http import HttpResponseRedirect
+
+def contact(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        complaint = request.POST.get('complaint')
+
+        # Send email to admin
+        subject = 'User Complaint'
+        message = f'User with email {email} has the following complaint:\n\n{complaint}'
+        from_email ='projectdemocs699@zohomail.in'
+        to_email = '23m0747@iitb.ac.in'  # Replace with your admin's email address
+
+        send_mail(subject, message, from_email, [to_email])
+
+        # Redirect to a thank you page or the same contact page with a success message
+        return HttpResponseRedirect('/thank-you/')  # Update the URL as needed
+
+    return render(request, 'contact.html')
+
+def about(request):
+    return render(request,'about.html')

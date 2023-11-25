@@ -11,7 +11,6 @@ class ContactSubmission(models.Model):
         app_label='app'
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    enrolled_courses = models.ManyToManyField('Course', related_name='enrolled_students', blank=True)
     def __str__(self):
         return self.user.username
 
@@ -26,7 +25,6 @@ class Course(models.Model):
     title=models.CharField(max_length=500)
     author=models.ForeignKey(Author,on_delete=models.CASCADE,null=True)
     slug=models.SlugField(default='',max_length=500,null=True,blank=True)
-
     def __str__(self):
         return self.title
     

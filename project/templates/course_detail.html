@@ -157,7 +157,7 @@ h1{
 			<li> <a href="{% url 'index' %}">Home</a></li>
 			<li><a href="{% url 'courses' %}">Courses</a></li>
 			<li><a href="#about">About</a> </li>
-			<li><a href="contact">Contact</a></li>
+			<li><a href="{% url 'contact' %}">Contact</a></li>
 		</u1>
 		<div class="header-icons">
 			<a href="{% url 'profile' %}"><i class="bx bx-user"></i>   </a>
@@ -175,7 +175,7 @@ h1{
         {% endif %}
     {% endif %}
 {% endif %}
-    <h1 onclick="toggleSidebar()">{{ course.title }} - Video List</h1>
+    <h1>{{ course.title }} - Video List</h1>
     <div class="video-container">
         <div class="video-list" id="videoList">
             <ul>

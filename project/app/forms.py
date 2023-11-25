@@ -30,3 +30,6 @@ class VideoForm(forms.ModelForm):
             'video_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Video URL'}),
         }
 VideoFormSet = inlineformset_factory(Course, Video, form=VideoForm, extra=5, can_delete=True)
+
+class EnrollmentForm(forms.Form):
+    cours_id=forms.IntegerField(widget=forms.HiddenInput)
